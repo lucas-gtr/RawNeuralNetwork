@@ -99,7 +99,7 @@ We can see that the loss is decreasing. Now, if we print the outpout of the mode
 
 <img width="94" alt="XOR results" src="https://github.com/lucas-gtr/RawNeuralNetwork/assets/12534925/48a5d788-3818-4ece-905d-4030a1fcf203">
 
-The complete file of this example is available in the [xor_example file](src/exampes/xor_examples.py) of [example folder] (src/examples).
+The complete file of this example is available in the [xor_example file](src/examples/xor_example.py) of [example folder](src/examples).
 
 A complete documentation for each class of this project (layers, activations function, optimizers, etc.) is available in the wiki of this project.
 
