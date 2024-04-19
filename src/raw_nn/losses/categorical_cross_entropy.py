@@ -9,8 +9,9 @@ class CategoricalCrossEntropy(Loss):
     """
     def forward(self, y_pred: np.ndarray, y_true: np.ndarray) -> np.ndarray:
         batch_size, output_size = y_pred.shape
-
         y_pred_clip = np.clip(y_pred, 1e-7, 1 - 1e-7)
+
+        y_true = y_true.flatten()
 
         categorical_loss = y_pred_clip[range(batch_size), y_true]
 

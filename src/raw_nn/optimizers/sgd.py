@@ -24,15 +24,20 @@ class SGD(Optimizer):
         if self.momentum:
             if not hasattr(layer, 'weight_momentums'):
                 layer.weight_momentums = np.zeros_like(layer.weights)
-                layer.bias_momentums = np.zeros_like(layer.biases)
+                if layer.include_biases:
+                    layer.bias_momentums = np.zeros_like(layer.biases)
 
             weight_updates = self.momentum * layer.weight_momentums - self.current_learning_rate * layer.d_weights
             layer.weight_momentums = weight_updates
-            bias_updates = self.momentum * layer.bias_momentums - self.current_learning_rate * layer.d_biases
-            layer.bias_momentums = bias_updates
+            layer.weights += weight_updates
+            if layer.include_biases:
+                bias_updates = self.momentum * layer.bias_momentums - self.current_learning_rate * layer.d_biases
+                layer.bias_momentums = bias_updates
+                layer.biases += bias_updates
         else:
             weight_updates = -self.current_learning_rate * layer.d_weights
-            bias_updates = -self.current_learning_rate * layer.d_biases
+            layer.weights += weight_updates
+            if layer.include_biases:
+                bias_updates = -self.current_learning_rate * layer.d_biases
+                layer.biases += bias_updates
 
-        layer.weights += weight_updates
-        layer.biases += bias_updates

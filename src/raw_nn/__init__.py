@@ -1,12 +1,12 @@
+from .layer import Layer
+from .trainable_layers.trainable_layer import TrainableLayer
+from .trainable_layers.dense import Dense
+
 from .optimizers.optimizer import Optimizer
 from .optimizers.adagrad import Adagrad
 from .optimizers.adam import Adam
 from .optimizers.rmsprop import RMSProp
 from .optimizers.sgd import SGD
-
-from .layer import Layer
-from .trainable_layers.trainable_layer import TrainableLayer
-from .trainable_layers.dense import Dense
 
 from .activations.linear import Linear
 from .activations.relu import ReLU

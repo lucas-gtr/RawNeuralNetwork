@@ -22,12 +22,14 @@ class Adagrad(Optimizer):
     def update_params(self, layer):
         if not hasattr(layer, 'weight_cache'):
             layer.weight_cache = np.zeros_like(layer.weights)
-            layer.bias_cache = np.zeros_like(layer.biases)
+            if layer.include_biases:
+                layer.bias_cache = np.zeros_like(layer.biases)
 
         layer.weight_cache += layer.d_weights ** 2
-        layer.bias_cache += layer.d_biases ** 2
-
         layer.weights -= (self.current_learning_rate * layer.d_weights /
                           (np.sqrt(layer.weight_cache) + self.epsilon))
-        layer.biases -= (self.current_learning_rate * layer.d_biases /
-                         (np.sqrt(layer.bias_cache) + self.epsilon))
+
+        if layer.include_biases:
+            layer.bias_cache += layer.d_biases ** 2
+            layer.biases -= (self.current_learning_rate * layer.d_biases /
+                             (np.sqrt(layer.bias_cache) + self.epsilon))

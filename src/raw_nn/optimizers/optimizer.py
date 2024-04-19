@@ -1,5 +1,7 @@
 from typing import List
 
+from raw_nn import TrainableLayer
+
 
 class Optimizer:
     """
@@ -32,7 +34,7 @@ class Optimizer:
 
         self.iterations += 1
 
-    def update_params(self, layer):
+    def update_params(self, layer: TrainableLayer):
         """
         Updates the parameters of the layer based on the optimization algorithm.
 

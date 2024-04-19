@@ -1,6 +1,4 @@
-from raw_nn import Model
-from raw_nn import Loss
-from raw_nn import Optimizer
+from raw_nn import Model, Loss, CategoricalCrossEntropy, BinaryCrossEntropy, Optimizer
 import numpy as np
 import math
 
@@ -8,7 +6,7 @@ import math
 def train_model(model: Model, X: np.ndarray, y: np.ndarray,
                 X_test: np.ndarray, y_test: np.ndarray,
                 loss_fn: Loss, optimizer: Optimizer,
-                epochs=10, batch_size=64, print_training=True, print_every=100):
+                epochs=10, batch_size=32):
     """
    Trains the given model using the provided data.
 
@@ -22,8 +20,6 @@ def train_model(model: Model, X: np.ndarray, y: np.ndarray,
        optimizer: The optimizer for updating model parameters.
        epochs (optional): The number of epochs for training. Defaults to 10.
        batch_size (optional): The batch size for training. Defaults to 64.
-       print_training (optional): Whether to print the training loss and accuracy. Defaults to True.
-       print_every (optional): Frequency of printing training progress. Defaults to 100.
    """
     model.train()
 
@@ -32,24 +28,28 @@ def train_model(model: Model, X: np.ndarray, y: np.ndarray,
     for epoch in range(epochs):
         print(f'--- Epoch: {epoch + 1} / {epochs} ---')
         model.train()
+        correct_predictions = 0
+        total_loss = 0
         for step in range(total_train_steps):
             batch_X = X[step * batch_size:(step + 1) * batch_size]
-            batch_Y = y[step * batch_size:(step + 1) * batch_size]
+            batch_y = y[step * batch_size:(step + 1) * batch_size]
 
             batch_y_pred = model(batch_X)
-            total_loss = loss_fn(batch_y_pred, batch_Y)
+            total_loss += loss_fn(batch_y_pred, batch_y)
+
             loss_fn.backward()
             optimizer.step()
 
-            predictions = np.argmax(batch_y_pred, axis=1)
-            acc = np.mean(predictions == batch_Y)
+            if isinstance(loss_fn, BinaryCrossEntropy) or isinstance(loss_fn, CategoricalCrossEntropy):
+                predictions = np.argmax(batch_y_pred, axis=1)
+                correct_predictions += np.count_nonzero(predictions == batch_y.flatten())
 
-            if print_training:
-                if not step % print_every:
-                    print(f'Train: step: {step}, ' +
-                          f'acc: {acc:.3f}, ' +
-                          f'loss: {total_loss:.3f} (' +
-                          f'lr: {optimizer.current_learning_rate})')
+        loss = total_loss / total_train_steps
+        if isinstance(loss_fn, BinaryCrossEntropy) or isinstance(loss_fn, CategoricalCrossEntropy):
+            acc = correct_predictions / X.shape[0]
+            print(f'Train: acc: {acc:.3f}, loss: {loss:.3f}')
+        else:
+            print(f'Train: loss: {loss:.3f}')
         eval_model(model, X_test, y_test, loss_fn)
 
 
@@ -68,13 +68,14 @@ def eval_model(model: Model, X_test: np.ndarray, y_test: np.ndarray, loss_fn: Lo
     y_test_pred = model(X_test)
     total_loss = loss_fn(y_test_pred, y_test)
 
-    predictions = np.argmax(y_test_pred, axis=1)
-    acc = np.mean(predictions == y_test)
+    if isinstance(loss_fn, BinaryCrossEntropy) or isinstance(loss_fn, CategoricalCrossEntropy):
+        predictions = np.argmax(y_test_pred, axis=1)
+        acc = np.mean(predictions == y_test.flatten())
 
-    print(f'Validation: acc: {acc:.3f}, ' +
-          f'loss: {total_loss:.3f}')
-
-    return acc, total_loss
+        print(f'Validation: acc: {acc:.3f}, ' +
+              f'loss: {total_loss:.3f}')
+    else:
+        print(f'Validation: loss: {total_loss:.3f}')
 
 
 def predict_model(model: Model, X: np.ndarray):

@@ -2,6 +2,20 @@ from raw_nn import Layer
 
 
 class TrainableLayer(Layer):
+    def __init__(self):
+        super().__init__()
+        self.include_biases = False
+
+        self.weights = None
+        self.d_weights = None
+        self.weight_regularizer_l1 = None
+        self.weight_regularizer_l2 = None
+
+        self.biases = None
+        self.d_biases = None
+        self.bias_regularizer_l1 = None
+        self.bias_regularizer_l2 = None
+
     def get_parameters(self) -> dict:
         """
         Return the parameters of the trainable layer.
@@ -9,10 +23,15 @@ class TrainableLayer(Layer):
         Returns:
             state_dict: Parameters names and values
         """
-        raise NotImplementedError("Subclasses of 'TrainableLayer' must implement 'get_parameters' method")
+        if self.include_biases:
+            return {'weights': self.weights, 'biases': self.biases}
+        else:
+            return {'weights': self.weights}
 
-    def set_parameters(self, *args, **kwargs):
+    def set_parameters(self, params):
         """
         Set the parameters of the trainable layer.
         """
-        raise NotImplementedError("Subclasses of 'TrainableLayer' must implement 'set_parameters' method")
+        self.weights = params['weights']
+        if self.include_biases:
+            self.biases = params['biases']
