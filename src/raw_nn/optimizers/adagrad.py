@@ -11,7 +11,7 @@ class Adagrad(Optimizer):
         Initializes the Adagrad optimizer.
 
         Args:
-            parameters: List of parameters (e.g., weights and biases) of the model.
+            parameters: List of parameters (e.g., weights and biase) of the model.
             learning_rate: The learning rate for the optimization algorithm.
             decay: The decay rate for the learning rate.
             epsilon: Small value to avoid division by zero.
@@ -22,14 +22,14 @@ class Adagrad(Optimizer):
     def update_params(self, layer):
         if not hasattr(layer, 'weight_cache'):
             layer.weight_cache = np.zeros_like(layer.weights)
-            if layer.include_biases:
-                layer.bias_cache = np.zeros_like(layer.biases)
+            if layer.include_bias:
+                layer.bias_cache = np.zeros_like(layer.bias)
 
         layer.weight_cache += layer.d_weights ** 2
         layer.weights -= (self.current_learning_rate * layer.d_weights /
                           (np.sqrt(layer.weight_cache) + self.epsilon))
 
-        if layer.include_biases:
-            layer.bias_cache += layer.d_biases ** 2
-            layer.biases -= (self.current_learning_rate * layer.d_biases /
-                             (np.sqrt(layer.bias_cache) + self.epsilon))
+        if layer.include_bias:
+            layer.bias_cache += layer.d_bias ** 2
+            layer.bias -= (self.current_learning_rate * layer.d_bias /
+                           (np.sqrt(layer.bias_cache) + self.epsilon))

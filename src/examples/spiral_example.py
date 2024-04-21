@@ -36,7 +36,6 @@ def generate_spiral_data(num_samples, num_classes, noise_level, train_percentage
 
 
 X, y, X_test, y_test = generate_spiral_data(SAMPLES_PER_CLASS, CLASSES, NOISE, TRAIN_PERCENTAGE)
-print(y)
 
 plt.scatter(X[:, 0], X[:, 1], c=y, cmap=plt.cm.coolwarm, s=20, edgecolors='k')
 # plt.show()
@@ -56,7 +55,7 @@ optimizer = nn.Adam(model.parameters, learning_rate=1e-2)
 loss_fn = nn.CategoricalCrossEntropy(model)
 
 # eval_model(model, X_test, y_test, loss_fn)
-train_model(model, X, y, X_test, y_test, loss_fn, optimizer, epochs=50, batch_size=16)
+train_model(model, X, y, X_test, y_test, loss_fn, optimizer, epochs=10, batch_size=16)
 
 model.save_parameters("models/spiral.parameters")  # Save the weights of the model
 model.save_model("models/spiral.model")  # Save the model with its layers its weights

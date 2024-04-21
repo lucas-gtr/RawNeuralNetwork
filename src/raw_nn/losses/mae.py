@@ -14,4 +14,6 @@ class MeanAbsoluteError(Loss):
         self.d_inputs = np.sign(y_pred - y_true) / output_size
         self.d_inputs = self.d_inputs / batch_size
 
-        return sample_losses
+        data_loss = np.mean(sample_losses)
+
+        return data_loss

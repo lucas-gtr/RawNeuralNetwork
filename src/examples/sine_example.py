@@ -39,10 +39,10 @@ model.add(nn.Dense(1, 64))
 model.add(nn.ReLU())
 model.add(nn.Dense(64, 1))
 
-model.load_parameters("models/sine.parameters")  # Load the parameters of an existing model
+# model.load_parameters("models/sine.parameters")  # Load the parameters of an existing model
 # model = nn.Model.load_model("models/sine.model")  # Create an entier model from a file
 
-optimizer = nn.Adam(model.parameters, learning_rate=1e-3)
+optimizer = nn.Adam(model.parameters, learning_rate=1e-2)
 loss_fn = nn.MeanSquaredError(model)
 
 # eval_model(model, X_test, y_test, loss_fn)

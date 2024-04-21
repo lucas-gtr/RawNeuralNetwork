@@ -12,7 +12,7 @@ class SGD(Optimizer):
         Initializes the SGD optimizer.
 
         Args:
-            parameters: List of parameters (e.g., weights and biases) of the model.
+            parameters: List of parameters (e.g., weights and bias) of the model.
             learning_rate: The learning rate for the optimization algorithm.
             decay: The decay rate for the learning rate.
             momentum: The momentum for the SGD update.
@@ -24,20 +24,20 @@ class SGD(Optimizer):
         if self.momentum:
             if not hasattr(layer, 'weight_momentums'):
                 layer.weight_momentums = np.zeros_like(layer.weights)
-                if layer.include_biases:
-                    layer.bias_momentums = np.zeros_like(layer.biases)
+                if layer.include_bias:
+                    layer.bias_momentums = np.zeros_like(layer.bias)
 
             weight_updates = self.momentum * layer.weight_momentums - self.current_learning_rate * layer.d_weights
             layer.weight_momentums = weight_updates
             layer.weights += weight_updates
-            if layer.include_biases:
-                bias_updates = self.momentum * layer.bias_momentums - self.current_learning_rate * layer.d_biases
+            if layer.include_bias:
+                bias_updates = self.momentum * layer.bias_momentums - self.current_learning_rate * layer.d_bias
                 layer.bias_momentums = bias_updates
-                layer.biases += bias_updates
+                layer.bias += bias_updates
         else:
             weight_updates = -self.current_learning_rate * layer.d_weights
             layer.weights += weight_updates
-            if layer.include_biases:
-                bias_updates = -self.current_learning_rate * layer.d_biases
-                layer.biases += bias_updates
+            if layer.include_bias:
+                bias_updates = -self.current_learning_rate * layer.d_bias
+                layer.bias += bias_updates
 

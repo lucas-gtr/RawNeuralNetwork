@@ -143,7 +143,7 @@ class Model:
 
         for layer in model.layers:
             for attr in ['inputs', 'output', 'd_inputs',
-                             'd_weights', 'd_biases']:
+                             'd_weights', 'd_bias']:
                 layer.__dict__.pop(attr, None)
 
         with open(path, 'wb') as f:

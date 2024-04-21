@@ -12,7 +12,7 @@ class Optimizer:
         Initializes the optimizer.
 
         Args:
-            parameters: List of parameters (e.g., weights and biases) of the model.
+            parameters: List of parameters (e.g., weights and bias) of the model.
             learning_rate: The learning rate for the optimization algorithm.
             decay: The decay rate for the learning rate.
         """

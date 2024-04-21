@@ -14,4 +14,6 @@ class MeanSquaredError(Loss):
         self.d_inputs = - 2 * (y_true - y_pred) / output_size
         self.d_inputs = self.d_inputs / batch_size
 
-        return sample_losses
+        data_loss = np.mean(sample_losses)
+
+        return data_loss

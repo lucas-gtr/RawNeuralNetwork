@@ -11,7 +11,7 @@ class Adam(Optimizer):
         Initializes the Adam optimizer.
 
         Args:
-            parameters: List of parameters (e.g., weights and biases) of the model.
+            parameters: List of parameters (e.g., weights and bias) of the model.
             learning_rate: The learning rate for the optimization algorithm.
             decay: The decay rate for the learning rate.
             epsilon: Small value to avoid division by zero.
@@ -27,9 +27,9 @@ class Adam(Optimizer):
         if not hasattr(layer, 'weight_cache'):
             layer.weight_cache = np.zeros_like(layer.weights)
             layer.weight_momentums = np.zeros_like(layer.weights)
-            if layer.include_biases:
-                layer.bias_cache = np.zeros_like(layer.biases)
-                layer.bias_momentums = np.zeros_like(layer.biases)
+            if layer.include_bias:
+                layer.bias_cache = np.zeros_like(layer.bias)
+                layer.bias_momentums = np.zeros_like(layer.bias)
 
         layer.weight_momentums = self.beta_1 * layer.weight_momentums + (1 - self.beta_1) * layer.d_weights
         weight_momentums_corrected = layer.weight_momentums / (1 - self.beta_1 ** (self.iterations + 1))
@@ -40,12 +40,12 @@ class Adam(Optimizer):
         layer.weights += -self.current_learning_rate * weight_momentums_corrected / \
                          (np.sqrt(weight_cache_corrected) + self.epsilon)
 
-        if layer.include_biases:
-            layer.bias_momentums = self.beta_1 * layer.bias_momentums + (1 - self.beta_1) * layer.d_biases
+        if layer.include_bias:
+            layer.bias_momentums = self.beta_1 * layer.bias_momentums + (1 - self.beta_1) * layer.d_bias
             bias_momentums_corrected = layer.bias_momentums / (1 - self.beta_1 ** (self.iterations + 1))
 
-            layer.bias_cache = self.beta_2 * layer.bias_cache + (1 - self.beta_2) * layer.d_biases ** 2
+            layer.bias_cache = self.beta_2 * layer.bias_cache + (1 - self.beta_2) * layer.d_bias ** 2
             bias_cache_corrected = layer.bias_cache / (1 - self.beta_2 ** (self.iterations + 1))
 
-            layer.biases += -self.current_learning_rate * bias_momentums_corrected / \
-                            (np.sqrt(bias_cache_corrected) + self.epsilon)
+            layer.bias += -self.current_learning_rate * bias_momentums_corrected / \
+                          (np.sqrt(bias_cache_corrected) + self.epsilon)

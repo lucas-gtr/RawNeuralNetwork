@@ -8,7 +8,6 @@ from .optimizers.adam import Adam
 from .optimizers.rmsprop import RMSProp
 from .optimizers.sgd import SGD
 
-from .activations.linear import Linear
 from .activations.relu import ReLU
 from .activations.sigmoid import Sigmoid
 from .activations.softmax import Softmax

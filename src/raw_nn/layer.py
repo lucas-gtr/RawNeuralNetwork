@@ -5,7 +5,6 @@ class Layer:
     """
     Base class for neural network trainable_layers.
     """
-
     def __init__(self):
         """
         Initializes the layer.

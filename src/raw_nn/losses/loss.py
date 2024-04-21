@@ -29,18 +29,18 @@ class Loss:
 
         for layer in self.parameters:
             if isinstance(layer, Dense):
-                if layer.weight_regularizer_l1 > 0:
-                    regularization_loss += layer.weight_regularizer_l1 * np.sum(np.abs(layer.weights))
+                if layer.weights_regularizer_l1 > 0:
+                    regularization_loss += layer.weights_regularizer_l1 * np.sum(np.abs(layer.weights))
 
-                if layer.weight_regularizer_l2 > 0:
-                    regularization_loss += layer.weight_regularizer_l2 * np.sum(layer.weights * layer.weights)
+                if layer.weights_regularizer_l2 > 0:
+                    regularization_loss += layer.weights_regularizer_l2 * np.sum(layer.weights * layer.weights)
 
-                if layer.include_biases:
+                if layer.include_bias:
                     if layer.bias_regularizer_l1 > 0:
-                        regularization_loss += layer.bias_regularizer_l1 * np.sum(np.abs(layer.biases))
+                        regularization_loss += layer.bias_regularizer_l1 * np.sum(np.abs(layer.bias))
 
                     if layer.bias_regularizer_l2 > 0:
-                        regularization_loss += layer.bias_regularizer_l2 * np.sum(layer.biases * layer.biases)
+                        regularization_loss += layer.bias_regularizer_l2 * np.sum(layer.bias * layer.bias)
 
         return regularization_loss
 
@@ -65,22 +65,17 @@ class Loss:
         for layer in reversed(self.layers):
             d_inputs = layer.backward(d_inputs)
 
-    def __call__(self, y_pred: np.ndarray, y_true: np.ndarray, *, include_regularization: bool = False):
+    def __call__(self, y_pred: np.ndarray, y_true: np.ndarray):
         """
         Computes the loss.
 
         Args:
             y_pred: Predicted labels.
             y_true: True labels.
-            include_regularization: Whether to include regularization loss.
 
         Returns:
             Data loss or data loss with regularization.
         """
         loss = self.forward(y_pred, y_true)
-        data_loss = np.mean(loss)
-        regularization_loss = self.regularization_loss()
-        if include_regularization:
-            return data_loss, regularization_loss
-        else:
-            return data_loss
+        self.regularization_loss()
+        return loss

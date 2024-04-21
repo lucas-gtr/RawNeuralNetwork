@@ -13,10 +13,13 @@ class BinaryCrossEntropy(Loss):
         if len(y_true.shape) == 1:
             y_true = y_true.reshape(-1, 1)
 
-        sample_losses = -(y_true * np.log(y_pred_clipped) + (1 - y_true) * np.log(1 - y_pred_clipped))
+        sample_losses = -y_true * np.log(y_pred_clipped) \
+                        - (1 - y_true) * np.log(1 - y_pred_clipped)
         sample_losses = np.mean(sample_losses, axis=-1)
 
-        self.d_inputs = -(y_true / y_pred_clipped - (1 - y_true) / (1 - y_pred_clipped)) / output_size
+        self.d_inputs = (-y_true / y_pred_clipped + (1 - y_true) / (1 - y_pred_clipped)) / output_size
         self.d_inputs = self.d_inputs / batch_size
 
-        return sample_losses
+        data_loss = np.mean(sample_losses)
+
+        return data_loss

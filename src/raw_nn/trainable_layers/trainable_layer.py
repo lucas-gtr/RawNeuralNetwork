@@ -4,15 +4,15 @@ from raw_nn import Layer
 class TrainableLayer(Layer):
     def __init__(self):
         super().__init__()
-        self.include_biases = False
+        self.include_bias = True
 
         self.weights = None
         self.d_weights = None
-        self.weight_regularizer_l1 = None
-        self.weight_regularizer_l2 = None
+        self.weights_regularizer_l1 = None
+        self.weights_regularizer_l2 = None
 
-        self.biases = None
-        self.d_biases = None
+        self.bias = None
+        self.d_bias = None
         self.bias_regularizer_l1 = None
         self.bias_regularizer_l2 = None
 
@@ -23,15 +23,15 @@ class TrainableLayer(Layer):
         Returns:
             state_dict: Parameters names and values
         """
-        if self.include_biases:
-            return {'weights': self.weights, 'biases': self.biases}
+        if self.include_bias:
+            return {'weights': self.weights, 'bias': self.bias}
         else:
             return {'weights': self.weights}
 
-    def set_parameters(self, params):
+    def set_parameters(self, state_dict):
         """
         Set the parameters of the trainable layer.
         """
-        self.weights = params['weights']
-        if self.include_biases:
-            self.biases = params['biases']
+        self.weights = state_dict['weights']
+        if self.include_bias:
+            self.bias = state_dict['bias']

@@ -14,6 +14,7 @@ class CategoricalCrossEntropy(Loss):
         y_true = y_true.flatten()
 
         categorical_loss = y_pred_clip[range(batch_size), y_true]
+        sample_losses = -np.log(categorical_loss)
 
         if isinstance(self.layers[-1], Softmax):
             self.d_inputs = y_pred.copy()
@@ -24,7 +25,9 @@ class CategoricalCrossEntropy(Loss):
             self.d_inputs = -y_true / y_pred
             self.d_inputs = self.d_inputs / batch_size
 
-        return -np.log(categorical_loss)
+        data_loss = np.mean(sample_losses)
+
+        return data_loss
 
     def backward(self):
         if isinstance(self.layers[-1], Softmax):

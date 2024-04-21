@@ -2,7 +2,7 @@ import numpy as np
 import raw_nn as nn
 
 X = np.array([[0, 0], [1, 0], [0, 1], [1, 1]])
-y = np.array([0, 1, 1, 0])
+y = np.array([[0], [1], [1], [0]])
 
 model = nn.Model()
 
@@ -12,7 +12,7 @@ model.add(nn.Dense(10, 1))  # Add a Dense layer with 10 inputs and 1 output
 model.add(nn.Sigmoid())
 
 optimizer = nn.Adam(model.parameters, learning_rate=1e-2)
-loss_fn = nn.BinaryCrossEntropy(model)
+loss_fn = nn.MeanAbsoluteError(model)
 
 for epoch in range(1, 1001):
     y_pred = model(X)
